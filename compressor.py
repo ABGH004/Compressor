@@ -2,24 +2,7 @@ from tkinter import *
 from tkinter import filedialog
 from collections import Counter
 from queue import PriorityQueue
-
-def browseFiles():
-	filename = filedialog.askopenfilename(initialdir = ".",
-										title = "Select a File",
-										filetypes = (("Text files",
-														"*.txt*"),
-													("all files",
-														"*.*")))
-	if filename.endswith(".txt"):
-		compress(filename, "compressed.cmp")
-		label_status.config(text="successfully compressed!!!")
-	elif filename.endswith(".cmp"):
-		decompress(filename, "decompressed.txt")
-		label_status.config(text="successfully decompressed!!!")
-	else:
-		pass
-		#error handling implementation
-
+import os
 
 class HuffmanNode:
     def __init__(self, char, freq=0, left=None, right=None):
@@ -148,6 +131,28 @@ def _decode_huffman_tree(tree_code_ar):
 
     return HuffmanNode(None, left=_decode_huffman_tree(tree_code_ar)
 				      , right=_decode_huffman_tree(tree_code_ar))
+
+#GUI
+
+def browseFiles():
+	
+	filename = filedialog.\
+	askopenfilename(initialdir = ".", title = "Select a File",
+					filetypes = (("Text files", "*.txt*"), ("all files","*.*")))
+	
+	if not filename:
+		label_status.config(text="")
+	elif os.path.getsize(filename) == 0:
+		label_status.config(text="cannot compress or decompress\nan empty file")
+	elif filename.endswith(".txt"):
+		compress(filename, "compressed.cmp")
+		label_status.config(text="successfully compressed!!!")
+	elif filename.endswith(".cmp"):
+		decompress(filename, "decompressed.txt")
+		label_status.config(text="successfully decompressed!!!")
+	else:
+		label_status.config(text="cannot compress or decompress a file with\n\"" 
+				   			+ os.path.splitext(filename)[1] + "\" extention!!")
 
 
 window = Tk()
